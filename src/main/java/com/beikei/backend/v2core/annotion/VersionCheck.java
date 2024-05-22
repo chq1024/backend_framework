@@ -1,6 +1,7 @@
 package com.beikei.backend.v2core.annotion;
 
-import com.h7culture.manage.v2core.validator.VersionCheckValidator;
+
+import com.beikei.backend.v2core.validator.VersionCheckValidator;
 
 import javax.validation.Constraint;
 import java.lang.annotation.*;

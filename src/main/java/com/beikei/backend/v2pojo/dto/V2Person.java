@@ -1,6 +1,6 @@
 package com.beikei.backend.v2pojo.dto;
 
-import com.h7culture.manage.v2core.core.V2CommentDTO;
+import com.beikei.backend.v2core.core.V2CommentDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

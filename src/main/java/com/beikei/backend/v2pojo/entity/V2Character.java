@@ -1,6 +1,6 @@
 package com.beikei.backend.v2pojo.entity;
 
-import com.h7culture.manage.v2core.core.V2RecordCommentEntity;
+import com.beikei.backend.v2core.core.V2RecordCommentEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

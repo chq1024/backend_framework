@@ -1,6 +1,6 @@
 package com.beikei.backend.v2core.validator;
 
-import com.h7culture.manage.v2core.annotion.VersionCheck;
+import com.beikei.backend.v2core.annotion.VersionCheck;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

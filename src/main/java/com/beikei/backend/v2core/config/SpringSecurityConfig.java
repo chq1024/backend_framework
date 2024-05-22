@@ -1,7 +1,7 @@
 package com.beikei.backend.v2core.config;
 
-import com.h7culture.manage.v2core.exception.V2AccessDeniedHandler;
-import com.h7culture.manage.v2core.exception.V2AuthenticationHandler;
+import com.beikei.backend.v2core.exception.V2AccessDeniedHandler;
+import com.beikei.backend.v2core.exception.V2AuthenticationHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

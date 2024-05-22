@@ -1,0 +1,9 @@
+server:
+  port: 30001
+spring:
+  application:
+    name: backend_framework
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root

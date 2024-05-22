@@ -1,6 +1,6 @@
 package com.beikei.backend.v2core.exception;
 
-import com.h7culture.manage.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2core.enums.ResponseEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;

@@ -1,7 +1,7 @@
 package com.beikei.backend.v2core.exception;
 
-import com.h7culture.manage.v2core.core.V2CommentResponse;
-import com.h7culture.manage.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2core.core.V2CommentResponse;
+import com.beikei.backend.v2core.enums.ResponseEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,8 +1,8 @@
 package com.beikei.backend.v2core.core;
 
+import com.beikei.backend.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2util.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.h7culture.manage.v2core.enums.ResponseEnum;
-import com.h7culture.manage.v2util.SpringUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.MDC;
