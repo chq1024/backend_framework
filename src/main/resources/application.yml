@@ -1,9 +1,35 @@
 server:
   port: 30001
 spring:
+  profiles:
+    active: dev
   application:
     name: backend_framework
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
+    url: jdbc:mysql://${mysql_address:localhost:3306}/v2_framework?${mysql_param:useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&serverTimezone=GMT%2B8}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 60000
+      auto-commit: true
+    type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    host: ${redis_host:localhost}
+    port: ${redis_port:6379}
+    password: ${redis_password:}
+    database: 0
+    lettuce:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: -1ms
+      shutdown-timeout: 10000ms
+    timeout: 60000ms
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

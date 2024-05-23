@@ -11,7 +11,9 @@ public enum ResponseEnum {
 
     SUCCESS(200,"success"),
     FAIL(500,"fail"),
-    TENANT_NOT_VALID(10001,"租户不合法");
+    TENANT_NOT_VALID(10001,"租户不合法"),
+    TENANT_PARAM_ERROR(10002,"缺少关键参数"),
+    TENANT_NOT_EXITS(10003,"租户不合法"),
     ;
 
     private final Integer code;
