@@ -11,6 +11,7 @@ public enum ResponseEnum {
 
     SUCCESS(200,"success"),
     FAIL(500,"fail"),
+    TENANT_NOT_VALID(10001,"租户不合法");
     ;
 
     private final Integer code;

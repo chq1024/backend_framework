@@ -2,12 +2,16 @@ package com.beikei.backend.v2core.config;
 
 import com.beikei.backend.v2core.exception.V2AccessDeniedHandler;
 import com.beikei.backend.v2core.exception.V2AuthenticationHandler;
+import com.beikei.backend.v2core.filter.TenantFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * SpringSecurityConfig配置
@@ -18,6 +22,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .headers().cacheControl().disable()
@@ -26,8 +35,9 @@ public class SpringSecurityConfig {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterBefore(new TenantFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(
-                        auth -> auth.antMatchers("/v2/u/login", "/v2/u/u/logout","/v2/u/publicKey", "/v2/openapi/**")
+                        auth -> auth.antMatchers("/v2/u/login", "/v2/u/logout","/v2/u/pubKey", "/v2/openapi/**")
                                 .permitAll().anyRequest().authenticated())
                 .exceptionHandling().authenticationEntryPoint(new V2AuthenticationHandler())
                 .accessDeniedHandler(new V2AccessDeniedHandler());
