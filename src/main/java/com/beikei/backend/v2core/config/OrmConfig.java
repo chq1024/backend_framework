@@ -9,8 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Optional;
 
@@ -29,14 +32,14 @@ public class OrmConfig {
 
     @Bean("primaryProperties")
     @ConfigurationProperties(prefix = "spring.datasource.primary")
-    public DataSourceProperties properties() {
-        return new DataSourceProperties();
+    public V2DataSourceProperties properties() {
+        return new V2DataSourceProperties();
     }
 
     @Bean(name = "primaryDatasource")
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.primary.hikari")
-    public HikariDataSource primaryDataSource(@Qualifier("primaryProperties") DataSourceProperties properties) {
+    public HikariDataSource primaryDataSource(@Qualifier("primaryProperties") V2DataSourceProperties properties) {
         HikariDataSource dataSource = (HikariDataSource) OrmConfig.createDataSource(properties, HikariDataSource.class);
         String poolName = Optional.ofNullable(properties.getName()).orElse("primary_hikari_pool");
         dataSource.setPoolName(poolName);
@@ -49,11 +52,15 @@ public class OrmConfig {
         return new DataSourceTransactionManager(primaryDatasource);
     }
 
-    @Bean
+    @Bean("primarySqlSessionFactory")
     @Primary
-    public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDatasource") HikariDataSource primaryDatasource) throws Exception {
+    public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDatasource") HikariDataSource primaryDatasource,
+                                                      @Qualifier("primaryProperties") V2DataSourceProperties properties) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-
+        factoryBean.setDataSource(primaryDatasource);
+        factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource(properties.getMapperLocation()));
+        factoryBean.setTypeHandlersPackage(properties.getTypeHandlersPackage());
+        factoryBean.setTypeAliasesPackage(properties.getTypeAliasesPackage());
         return factoryBean.getObject();
     }
 

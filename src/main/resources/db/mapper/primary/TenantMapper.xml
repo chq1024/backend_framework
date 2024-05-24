@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beikei.backend.v2pojo.mapper.TenantMapper">
+    <!-- 安全查询租户信息  -->
+    <sql id="SECURITY_SELECT_FIELD">
+        ID,TENANT_ID,STATUS,EXPIRE_TIME
+    </sql>
+
+    <select id="load" resultType="com.beikei.backend.v2pojo.entity.V2Tenant">
+        SELECT
+        <include refid="SECURITY_SELECT_FIELD"/>
+        FROM TENANT WHERE STATUS = 1
+    </select>
+
+    <select id="one" resultType="com.beikei.backend.v2pojo.entity.V2Tenant">
+        SELECT
+        <include refid="SECURITY_SELECT_FIELD"/>
+        FROM TENANT WHERE TENANT_ID = #{tenantId}
+    </select>
+</mapper>

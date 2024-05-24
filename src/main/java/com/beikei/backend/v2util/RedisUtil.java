@@ -32,6 +32,10 @@ public class RedisUtil {
         return redisTemplate.opsForValue().get(key);
     }
 
+    public static void setStringKeyValue(String key,Object value) {
+         redisTemplate.opsForValue().set(key,value);
+    }
+
 
 
     public static boolean lock(String key,long timeout, TimeUnit unit) {

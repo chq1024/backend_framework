@@ -16,8 +16,9 @@ public class V2Tenant extends V2RecordCommentEntity {
 
     private Long id;
     private String tenantId;
-    private Boolean status;
+    private Integer status;
     // 如果续费模式可以使用
     private Long expireTime;
     private String remark;
+
 }
