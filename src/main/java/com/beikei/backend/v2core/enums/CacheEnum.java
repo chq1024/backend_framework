@@ -9,7 +9,10 @@ import lombok.Getter;
 @Getter
 public enum CacheEnum {
 
-    TENANT("tenant");
+    TENANT("tenant"),
+
+    SECURITY("security"),
+    ;
 
     private final String belong;
     CacheEnum(String belong) {

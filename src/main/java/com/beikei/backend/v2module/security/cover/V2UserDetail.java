@@ -1,4 +1,4 @@
-package com.beikei.backend.v2module.security.orm;
+package com.beikei.backend.v2module.security.cover;
 
 import com.beikei.backend.v2pojo.entity.V2Tenant;
 import com.beikei.backend.v2pojo.entity.V2User;

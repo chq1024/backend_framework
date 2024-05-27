@@ -3,6 +3,7 @@ package com.beikei.backend.v2core.exception;
 import com.beikei.backend.v2core.core.V2CommentResponse;
 import com.beikei.backend.v2core.enums.ResponseEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,12 @@ public class V2ExceptionHandler {
     public <T> V2CommentResponse<T> handlerV2GameException(V2GameException exception) {
         log.error("服务端运行时异常,{}", exception.getMessage());
         return V2CommentResponse.fail(exception.getCode(),exception.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public <T> V2CommentResponse<T> handlerUsernameNotFoundException(UsernameNotFoundException exception) {
+        log.error("认证失败，{}", exception.getMessage());
+        return V2CommentResponse.fail(ResponseEnum.USER_NOT_MATCH.getCode(),ResponseEnum.USER_NOT_MATCH.getMessage());
     }
 
     /**

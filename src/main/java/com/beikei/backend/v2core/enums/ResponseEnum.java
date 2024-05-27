@@ -11,12 +11,16 @@ public enum ResponseEnum {
 
     SUCCESS(200,"success"),
     FAIL(500,"fail"),
+    UNKNOWN_ERROR(99999,"服务器繁忙，请稍后重试"),
 
     TENANT_NOT_VALID(10001,"租户不合法"),
     TENANT_PARAM_ERROR(10002,"缺少关键参数"),
     TENANT_NOT_EXITS(10003,"租户不合法"),
 
-    USER_NOT_MATCH(20001,"账号名或密码错误")
+    USER_NOT_MATCH(20001,"账号名或密码错误"),
+
+
+    AUTHENTICATION_PARAM_ERROR(30001,"认证参数异常")
     ;
 
     private final Integer code;

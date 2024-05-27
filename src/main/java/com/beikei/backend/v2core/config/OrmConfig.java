@@ -4,16 +4,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Optional;
 
@@ -26,20 +23,20 @@ import java.util.Optional;
 @Configuration
 public class OrmConfig {
 
-    protected static DataSource createDataSource(DataSourceProperties properties, Class<? extends DataSource> type) {
+    protected static DataSource createDataSource(org.springframework.boot.autoconfigure.jdbc.DataSourceProperties properties, Class<? extends DataSource> type) {
         return properties.initializeDataSourceBuilder().type(type).build();
     }
 
     @Bean("primaryProperties")
     @ConfigurationProperties(prefix = "spring.datasource.primary")
-    public V2DataSourceProperties properties() {
-        return new V2DataSourceProperties();
+    public DataSourceProperties properties() {
+        return new DataSourceProperties();
     }
 
     @Bean(name = "primaryDatasource")
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.primary.hikari")
-    public HikariDataSource primaryDataSource(@Qualifier("primaryProperties") V2DataSourceProperties properties) {
+    public HikariDataSource primaryDataSource(@Qualifier("primaryProperties") DataSourceProperties properties) {
         HikariDataSource dataSource = (HikariDataSource) OrmConfig.createDataSource(properties, HikariDataSource.class);
         String poolName = Optional.ofNullable(properties.getName()).orElse("primary_hikari_pool");
         dataSource.setPoolName(poolName);
@@ -55,7 +52,7 @@ public class OrmConfig {
     @Bean("primarySqlSessionFactory")
     @Primary
     public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDatasource") HikariDataSource primaryDatasource,
-                                                      @Qualifier("primaryProperties") V2DataSourceProperties properties) throws Exception {
+                                                      @Qualifier("primaryProperties") DataSourceProperties properties) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(primaryDatasource);
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource(properties.getMapperLocation()));

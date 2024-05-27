@@ -3,10 +3,10 @@ package com.beikei.backend.v2core.config;
 import com.beikei.backend.v2core.exception.V2AccessDeniedHandler;
 import com.beikei.backend.v2core.exception.V2AuthenticationHandler;
 import com.beikei.backend.v2core.filter.TenantFilter;
+import com.beikei.backend.v2core.filter.TokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +39,7 @@ public class SpringSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(new TenantFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenFilter(),UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(
                         auth -> auth.antMatchers("/v2/u/login", "/v2/u/logout","/v2/u/pubKey", "/v2/openapi/**")
                                 .permitAll().anyRequest().authenticated())

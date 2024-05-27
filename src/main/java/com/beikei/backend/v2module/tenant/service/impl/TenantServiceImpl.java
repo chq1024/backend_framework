@@ -13,7 +13,7 @@ import java.util.List;
  * @author bk
  */
 @Service
-@Transactional
+@Transactional("primaryTransactionManager")
 public class TenantServiceImpl implements TenantService {
 
     private final TenantHelper tenantHelper;

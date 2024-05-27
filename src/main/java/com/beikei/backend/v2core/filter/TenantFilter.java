@@ -12,28 +12,23 @@ import com.beikei.backend.v2util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Slf4j
-public class TenantFilter implements Filter {
-
-    /**
-     * 需要去加载当前所有租户ID,并将它们存入redis
-     */
-    @Override
-    public void init(FilterConfig filterConfig) {
-        loadingTenants();
-    }
+public class TenantFilter extends OncePerRequestFilter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tenantId = (String) Optional.ofNullable(request.getAttribute(SystemKeyword.X_TENANT_ID)).orElse("");
         if (!StringUtils.hasText(tenantId)) {
             throw new V2GameException(ResponseEnum.TENANT_PARAM_ERROR);
@@ -52,11 +47,6 @@ public class TenantFilter implements Filter {
         // 将当前线程Tenant存储
         MDC.put(SystemKeyword.X_TENANT_ID, tenantId);
         filterChain.doFilter(request, response);
-    }
-
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
     }
 
     private void loadingTenants() {

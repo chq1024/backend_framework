@@ -1,6 +1,8 @@
 package com.beikei.backend.v2module.tenant.orm;
 
 import com.beikei.backend.v2core.core.V2CommentDomainHelper;
+import com.beikei.backend.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2core.exception.V2GameException;
 import com.beikei.backend.v2pojo.mapper.TenantMapper;
 import com.beikei.backend.v2pojo.entity.V2Tenant;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,10 @@ public class TenantHelper extends V2CommentDomainHelper {
     }
 
     public V2Tenant selectByTenantId(String tenantId) {
-        return tenantMapper.one(tenantId);
+        V2Tenant tenant = tenantMapper.one(tenantId);
+        if (tenant == null) {
+            throw new V2GameException(ResponseEnum.TENANT_NOT_EXITS);
+        }
+        return tenant;
     }
 }
