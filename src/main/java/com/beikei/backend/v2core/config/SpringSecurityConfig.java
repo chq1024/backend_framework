@@ -4,6 +4,7 @@ import com.beikei.backend.v2core.exception.V2AccessDeniedHandler;
 import com.beikei.backend.v2core.exception.V2AuthenticationHandler;
 import com.beikei.backend.v2core.filter.TenantFilter;
 import com.beikei.backend.v2core.filter.TokenFilter;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

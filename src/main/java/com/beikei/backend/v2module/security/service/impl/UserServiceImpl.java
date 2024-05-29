@@ -1,8 +1,9 @@
 package com.beikei.backend.v2module.security.service.impl;
 
-import com.beikei.backend.v2module.security.cover.V2Token;
+import com.beikei.backend.v2module.security.orm.RefreshTokenHelper;
 import com.beikei.backend.v2module.security.orm.UserHelper;
 import com.beikei.backend.v2module.security.service.UserService;
+import com.beikei.backend.v2pojo.entity.V2RefreshToken;
 import com.beikei.backend.v2pojo.entity.V2User;
 import com.beikei.backend.v2util.JwtUtil;
 import com.beikei.backend.v2util.SecurityUtil;
@@ -27,25 +28,29 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserHelper userHelper;
+    private final RefreshTokenHelper refreshTokenHelper;
 
     private final AuthenticationManager authenticationManager;
 
-    public UserServiceImpl(UserHelper userHelper, AuthenticationManager authenticationManager) {
+    public UserServiceImpl(UserHelper userHelper, RefreshTokenHelper refreshTokenHelper, AuthenticationManager authenticationManager) {
         this.userHelper = userHelper;
+        this.refreshTokenHelper = refreshTokenHelper;
         this.authenticationManager = authenticationManager;
     }
 
     @Override
     public Map<String, String> login(String username, String password) {
         String decodedPassword = SecurityUtil.passwordDecode(password);
-        V2User user = userHelper.selectByUserName(username);
+        V2User user = userHelper.query(username);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getAccount(), decodedPassword);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         String roles = authenticate.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining("#"));
-        V2Token v2Token = JwtUtil.genderToken(user.getId(),user.getAccount(),roles);
+        V2RefreshToken v2RefreshToken = refreshTokenHelper.queryAndCheck(user.getId(),false);
+        String accessToken = JwtUtil.genderAccessToken(user.getId(), user.getAccount(), roles);
+        String refreshToken = JwtUtil.genderRefreshToken(user.getId(), user.getAccount(), v2RefreshToken.getKeyword());
         Map<String,String> responseMap = new HashMap<>();
-        responseMap.put("accessToken",v2Token.getAccessToken());
-        responseMap.put("refreshToken",v2Token.getRefreshToken());
+        responseMap.put("accessToken",accessToken);
+        responseMap.put("refreshToken",refreshToken);
         return responseMap;
     }
 }

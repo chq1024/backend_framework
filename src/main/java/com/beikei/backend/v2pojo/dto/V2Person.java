@@ -22,4 +22,5 @@ public class V2Person extends V2CommentDTO {
     private String unick;
     private String email;
     private String remark;
+    private String roles;
 }

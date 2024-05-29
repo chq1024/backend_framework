@@ -13,13 +13,13 @@ import java.util.Optional;
 
 /**
  *
- *
  * @author bk
  */
 public class V2UserDetail implements UserDetails {
 
     private final V2User v2User;
 
+    // 该信息不应该保存在
     private final V2Tenant v2Tenant;
 
     private final List<GrantedAuthority> characters;

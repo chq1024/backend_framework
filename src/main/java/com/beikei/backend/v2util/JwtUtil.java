@@ -1,48 +1,91 @@
 package com.beikei.backend.v2util;
 
-import com.beikei.backend.v2module.security.cover.V2Token;
+import com.beikei.backend.v2core.config.SecurityProperties;
+import com.beikei.backend.v2core.enums.CacheEnum;
+import com.beikei.backend.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2core.exception.V2GameException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * jwt工具类
+ *
  * @author bk
  */
 @Component
+@Import({SecurityProperties.class})
 public class JwtUtil {
 
-    public static Claims parseToken(String token) {
+    private static String secret;
 
-        return null;
+    @Value("${security.secret}")
+    public static void setSecret(String secret) {
+        JwtUtil.secret = secret;
     }
 
-    public static V2Token genderToken(Long uid, String username, String roles) {
-        V2Token v2Token = new V2Token();
-        v2Token.setAccessToken(genderAccessToken0(uid,username,roles));
-        return v2Token;
+    /**
+     * 解析token，使用当前的secret解析
+     *
+     * @param token 需要被解析的token
+     * @return 解析后的body
+     */
+    public static Claims parseToken(String token, String keyword) {
+        String key = StringUtils.hasText(keyword) ? keyword : secret;
+        SecretKey secretKey = secretKey(key);
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
-    public static boolean validToken(Claims claims) {
+    /**
+     * 校验token，校验解析后的body值与当前用户是否相同
+     *
+     * @param claims 解析后的body
+     * @return 检查是否被篡改 true：安全 false：不安全
+     */
+    public static boolean validAccessToken(Claims claims) {
+        Date expiration = claims.getExpiration();
+        LocalDateTime dateTime = DateUtil.date2LocalDateTime(expiration);
+        if (dateTime.isBefore(DateUtil.localDate())) {
+            throw new V2GameException(ResponseEnum.AUTHENTICATION_TOKEN_ERROR);
+        }
+        Long sub = claims.get("sub",Long.class);
+        String username = claims.get("username", String.class);
 
         return false;
     }
 
-    private static String genderAccessToken0(Long uid,String username,String roles) {
-        Map<String,Object> accessTokenMap = new HashMap<>();
-        accessTokenMap.put("sub",uid);
-        accessTokenMap.put("username",username);
-        accessTokenMap.put("roles",roles);
-        return "";
+    public static String genderAccessToken(Long uid, String username, String roles) {
+        Map<String, Object> accessTokenMap = new HashMap<>();
+        accessTokenMap.put("sub", uid);
+        accessTokenMap.put("username", username);
+        LocalDateTime now = DateUtil.localDate().plusSeconds(7200);
+        Date expireDateTime = Date.from(now.toInstant(ZoneOffset.of("+8")));
+        return Jwts.builder().addClaims(accessTokenMap).setExpiration(expireDateTime).signWith(secretKey(secret), SignatureAlgorithm.HS256).compact();
     }
 
-    private static String genderRefreshToken0(String username,Integer times) {
+    public static String genderRefreshToken(Long uid, String username,String keyword) {
+        Map<String,Object> refreshTokenMap = new HashMap<>();
+        refreshTokenMap.put("sub", uid);
+        refreshTokenMap.put("username", username);
+        return Jwts.builder().addClaims(refreshTokenMap).signWith(secretKey(keyword), SignatureAlgorithm.HS256).compact();
+    }
 
-        return "";
+    private static SecretKey secretKey(String keyword) {
+        byte[] decode = keyword.getBytes();
+        return new SecretKeySpec(decode, 0, decode.length, "HmacSHA256");
     }
 
 }

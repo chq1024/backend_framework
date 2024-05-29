@@ -1,5 +1,6 @@
 package com.beikei.backend.v2core.config;
 
+import com.beikei.backend.v2core.interceptor.MybatisInterceptor;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -58,6 +59,7 @@ public class OrmConfig {
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource(properties.getMapperLocation()));
         factoryBean.setTypeHandlersPackage(properties.getTypeHandlersPackage());
         factoryBean.setTypeAliasesPackage(properties.getTypeAliasesPackage());
+        factoryBean.addPlugins(new MybatisInterceptor());
         return factoryBean.getObject();
     }
 

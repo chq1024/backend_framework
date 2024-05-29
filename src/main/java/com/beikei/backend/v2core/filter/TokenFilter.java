@@ -27,19 +27,18 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = request.getHeader(SystemKeyword.AUTHORIZATION);
+        request.getRemoteUser()
         if (StringUtils.hasText(accessToken)) {
             if (!accessToken.startsWith(SystemKeyword.BEARER)) {
                 throw new V2GameException(ResponseEnum.AUTHENTICATION_PARAM_ERROR);
             }
             accessToken = accessToken.replaceFirst(SystemKeyword.BEARER, "");
-            Claims claims = JwtUtil.parseToken(accessToken);
-            boolean pass = JwtUtil.validToken(claims);
+            Claims claims = JwtUtil.parseToken(accessToken,"");
+            boolean pass = JwtUtil.validAccessToken(claims);
             if (pass) {
                 // 加载当前内存中对应用户的的信息作为当前线程的认证信息
-
-//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                        user, null, user.getAuthorities());
-//                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
         filterChain.doFilter(request,response);

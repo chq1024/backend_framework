@@ -23,7 +23,7 @@ public class UserCharacterRelationShipHelper extends V2CommentDomainHelper {
         this.shipMapper = shipMapper;
     }
 
-    public List<GrantedAuthority> selectRolesByUid(Long uid) {
+    public List<GrantedAuthority> query(Long uid) {
         List<String> roles = shipMapper.selectRolesByUid(uid);
         return roles.stream().map(r->{
             String nr = "ROLE_" + r.trim();

@@ -7,6 +7,7 @@ import com.beikei.backend.v2module.tenant.orm.TenantHelper;
 import com.beikei.backend.v2pojo.entity.V2Tenant;
 import com.beikei.backend.v2pojo.entity.V2User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,7 @@ import java.util.List;
  * 用户信息加载类，服务于SpringSecurity Auth
  * @author bk
  */
-@Service
+@Service("myUserDetailService")
 @Transactional("primaryTransactionManager")
 public class MyUserDetailService implements UserDetailsService {
 
@@ -35,9 +36,9 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        V2User user = userHelper.selectByUserName(username);
+        V2User user = userHelper.query(username);
         V2Tenant tenant = tenantHelper.selectByTenantId(user.getTenantId());
-        List<GrantedAuthority> authorities = shipHelper.selectRolesByUid(user.getId());
+        List<GrantedAuthority> authorities = shipHelper.query(user.getId());
         return new V2UserDetail(user,authorities,tenant);
     }
 }

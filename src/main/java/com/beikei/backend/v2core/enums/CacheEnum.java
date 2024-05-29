@@ -12,6 +12,8 @@ public enum CacheEnum {
     TENANT("tenant"),
 
     SECURITY("security"),
+
+    USER("user"),
     ;
 
     private final String belong;
