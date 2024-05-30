@@ -1,6 +1,7 @@
 package com.beikei.backend.v2pojo.entity;
 
 import com.beikei.backend.v2core.core.V2RecordCommentEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -32,4 +33,7 @@ public class V2User extends V2RecordCommentEntity {
     private String phone;
     private Boolean opened;
     private String remark;
+
+    @JsonIgnore
+    private Boolean valid;
 }

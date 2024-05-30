@@ -1,8 +1,8 @@
 package com.beikei.backend.v2module.security.cover;
 
-import com.beikei.backend.v2pojo.entity.V2Tenant;
 import com.beikei.backend.v2pojo.entity.V2User;
-import com.beikei.backend.v2util.DateUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,21 +12,18 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
  * @author bk
  */
+@Getter
+@Setter
 public class V2UserDetail implements UserDetails {
 
     private final V2User v2User;
 
-    // 该信息不应该保存在
-    private final V2Tenant v2Tenant;
-
     private final List<GrantedAuthority> characters;
 
-    public V2UserDetail(V2User v2User, List<GrantedAuthority> characters,V2Tenant v2Tenant) {
+    public V2UserDetail(V2User v2User, List<GrantedAuthority> characters) {
         this.v2User = v2User;
-        this.v2Tenant = v2Tenant;
         this.characters = characters;
     }
 
@@ -52,7 +49,7 @@ public class V2UserDetail implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-        return v2Tenant.getStatus() ==  1 && v2Tenant.getExpireTime() > DateUtil.now();
+        return v2User.getValid();
     }
 
     /**

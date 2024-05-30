@@ -49,25 +49,7 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
-    /**
-     * 校验token，校验解析后的body值与当前用户是否相同
-     *
-     * @param claims 解析后的body
-     * @return 检查是否被篡改 true：安全 false：不安全
-     */
-    public static boolean validAccessToken(Claims claims) {
-        Date expiration = claims.getExpiration();
-        LocalDateTime dateTime = DateUtil.date2LocalDateTime(expiration);
-        if (dateTime.isBefore(DateUtil.localDate())) {
-            throw new V2GameException(ResponseEnum.AUTHENTICATION_TOKEN_ERROR);
-        }
-        Long sub = claims.get("sub",Long.class);
-        String username = claims.get("username", String.class);
-
-        return false;
-    }
-
-    public static String genderAccessToken(Long uid, String username, String roles) {
+    public static String genderAccessToken(Long uid, String username) {
         Map<String, Object> accessTokenMap = new HashMap<>();
         accessTokenMap.put("sub", uid);
         accessTokenMap.put("username", username);
