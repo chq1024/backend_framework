@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class V2CommentDTO implements Serializable {
+
+    public Long version;
     public Long createTime;
     public Long updateTime;
 }

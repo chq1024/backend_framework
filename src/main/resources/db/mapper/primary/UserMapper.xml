@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.beikei.backend.v2pojo.mapper.UserMapper">
-    <select id="one" resultType="com.beikei.backend.v2pojo.entity.V2User" parameterType="string">
+<mapper namespace="com.beikei.backend.v2orm.mapper.UserMapper">
+    <select id="one" resultType="com.beikei.backend.v2orm.entity.V2User" parameterType="string">
         SELECT * FROM USER WHERE ACCOUNT = #{account}
     </select>
 </mapper>

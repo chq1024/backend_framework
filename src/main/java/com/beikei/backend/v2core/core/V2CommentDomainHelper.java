@@ -15,5 +15,4 @@ public class V2CommentDomainHelper {
         this.commentMapper = commentMapper;
     }
 
-
 }

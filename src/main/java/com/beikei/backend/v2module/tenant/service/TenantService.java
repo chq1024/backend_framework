@@ -1,6 +1,6 @@
 package com.beikei.backend.v2module.tenant.service;
 
-import com.beikei.backend.v2pojo.entity.V2Tenant;
+import com.beikei.backend.v2orm.entity.V2Tenant;
 
 import java.util.List;
 

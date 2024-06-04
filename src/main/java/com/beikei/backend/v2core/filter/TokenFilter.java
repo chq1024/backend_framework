@@ -3,21 +3,21 @@ package com.beikei.backend.v2core.filter;
 import com.beikei.backend.v2core.config.SystemKeyword;
 import com.beikei.backend.v2core.enums.ResponseEnum;
 import com.beikei.backend.v2core.exception.V2GameException;
-import com.beikei.backend.v2module.security.cover.V2UserDetail;
-import com.beikei.backend.v2module.security.orm.UserHelper;
-import com.beikei.backend.v2util.CacheUtil;
+import com.beikei.backend.v2module.user.cover.V2UserDetail;
+import com.beikei.backend.v2orm.helper.UserHelper;
 import com.beikei.backend.v2util.JsonUtil;
 import com.beikei.backend.v2util.JwtUtil;
 import com.beikei.backend.v2util.SpringUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,8 +48,16 @@ public class TokenFilter extends OncePerRequestFilter {
                 responseGameException(response,ResponseEnum.AUTHENTICATION_TOKEN_ERROR);
                 return;
             }
+            // 校验当前租户是否匹配
+            String tenantId = userDetail.tenantId();
+            String currTenantId = MDC.get(SystemKeyword.X_TENANT_ID);
+            if (!tenantId.equals(currTenantId)) {
+                responseGameException(response,ResponseEnum.TENANT_NOT_EXITS);
+                return;
+            }
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            MDC.put(SystemKeyword.RQ_UID,String.valueOf(uid));
         }
         filterChain.doFilter(request, response);
     }

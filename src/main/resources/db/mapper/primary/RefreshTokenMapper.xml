@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.beikei.backend.v2pojo.mapper.RefreshTokenMapper">
+<mapper namespace="com.beikei.backend.v2orm.mapper.RefreshTokenMapper">
 
     <sql id="updateCommon">
         version = version + 1 and update_time = ${@com.beikei.backend.v2util.DateUtil@now()}
@@ -14,7 +14,7 @@
         WHERE ID = #{id} AND version = #{token.version}
     </update>
 
-    <select id="one" resultType="com.beikei.backend.v2pojo.entity.V2RefreshToken" parameterType="long">
+    <select id="one" resultType="com.beikei.backend.v2orm.entity.V2RefreshToken" parameterType="long">
         SELECT * FROM  refresh_token WHERE ID = #{uid}
     </select>
 

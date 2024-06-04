@@ -13,4 +13,6 @@ public class SystemKeyword {
     public static final String BEARER = "Bearer";
 
     public static final String REDIS_SPLIT_CHAR = ":";
+
+    public static final String RQ_UID = "rq_uid";
 }

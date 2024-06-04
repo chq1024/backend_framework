@@ -5,7 +5,7 @@ import com.beikei.backend.v2core.enums.CacheEnum;
 import com.beikei.backend.v2core.enums.ResponseEnum;
 import com.beikei.backend.v2core.exception.V2GameException;
 import com.beikei.backend.v2module.tenant.service.TenantService;
-import com.beikei.backend.v2pojo.entity.V2Tenant;
+import com.beikei.backend.v2orm.entity.V2Tenant;
 import com.beikei.backend.v2util.CacheUtil;
 import com.beikei.backend.v2util.RedisUtil;
 import com.beikei.backend.v2util.SpringUtil;

@@ -4,7 +4,6 @@ import com.beikei.backend.v2core.exception.V2AccessDeniedHandler;
 import com.beikei.backend.v2core.exception.V2AuthenticationHandler;
 import com.beikei.backend.v2core.filter.TenantFilter;
 import com.beikei.backend.v2core.filter.TokenFilter;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
 
 /**
  * SpringSecurityConfig配置
@@ -39,11 +39,13 @@ public class SpringSecurityConfig {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new TenantFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new TokenFilter(),UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TenantFilter(), TokenFilter.class)
                 .authorizeRequests(
-                        auth -> auth.antMatchers("/v2/u/login", "/v2/u/logout","/v2/u/pubKey", "/v2/openapi/**")
-                                .permitAll().anyRequest().authenticated())
+                        auth -> auth.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                                .antMatchers("/v2/u/login", "/v2/u/logout","/v2/u/pubKey", "/v2/openapi/**","/error").permitAll()
+                                .anyRequest()
+                                .authenticated())
                 .exceptionHandling()
                 .authenticationEntryPoint(new V2AuthenticationHandler())
                 .accessDeniedHandler(new V2AccessDeniedHandler());
