@@ -23,7 +23,10 @@ public enum ResponseEnum {
 
     AUTHENTICATION_PARAM_ERROR(30001,"认证参数异常"),
     AUTHENTICATION_TOKEN_ERROR(30002,"认证异常"),
-    AUTHENTICATION_REFRESH_TOKEN_ERROR(30003,"认证异常")
+    AUTHENTICATION_REFRESH_TOKEN_ERROR(30003,"认证异常"),
+
+
+    AUTHORIZATION_CHECK_ERROR(40001,"授权验证异常"),
     ;
 
     private final Integer code;

@@ -3,7 +3,9 @@ package com.beikei.backend.v2util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 主要用于简化Redis操作，可以替换客户端使用
@@ -28,8 +30,17 @@ public class RedisUtil {
         return (String) cache;
     }
 
+    public static List<String> getList(String key) {
+        List<Object> cache = getListKey(key);
+        return cache.stream().map(String::valueOf).collect(Collectors.toList());
+    }
+
     private static Object getKey(String key) {
         return redisTemplate.opsForValue().get(key);
+    }
+
+    private static List<Object> getListKey(String key) {
+        return redisTemplate.opsForList().range(key,0,-1);
     }
 
     public static void setStringKeyValue(String key,Object value) {
