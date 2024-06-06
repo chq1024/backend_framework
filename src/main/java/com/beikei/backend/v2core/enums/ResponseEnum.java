@@ -13,12 +13,14 @@ public enum ResponseEnum {
     FAIL(500,"fail"),
     UNKNOWN_ERROR(99999,"服务器繁忙，请稍后重试"),
     DB_NOT_FOUND_DATA(99998,"查询失败"),
+    ILLEGAL_ERROR(99997,"非法异常"),
 
     TENANT_NOT_VALID(10001,"租户不合法"),
     TENANT_PARAM_ERROR(10002,"缺少关键参数"),
     TENANT_NOT_EXITS(10003,"租户不合法"),
 
     USER_NOT_MATCH(20001,"账号名或密码错误"),
+    USER_USERNAME_EXITED(20002,"账号名已存在"),
 
 
     AUTHENTICATION_PARAM_ERROR(30001,"认证参数异常"),

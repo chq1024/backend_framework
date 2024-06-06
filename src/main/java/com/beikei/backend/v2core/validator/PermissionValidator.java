@@ -38,13 +38,6 @@ public class PermissionValidator implements PermissionEvaluator {
         if (!"ROLE".equalsIgnoreCase(source) && !"PERMISSION".equalsIgnoreCase(source)) {
             throw new V2GameException(ResponseEnum.AUTHORIZATION_CHECK_ERROR);
         }
-        List<Object> permissions = new ArrayList<>();
-        if (permission instanceof String) {
-            permissions.add(permission);
-        }
-        if (permission instanceof Collection) {
-            permissions.addAll((Collection<?>) permission);
-        }
         if ("ROLE".equalsIgnoreCase(source)) {
             GrantedAuthority grantedAuthority = authorities.stream().filter(r -> {
                 return r.getAuthority().equals(permission) && r.getAuthority().equals("ROLE_" + permission);

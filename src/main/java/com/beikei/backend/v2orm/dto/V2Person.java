@@ -20,7 +20,7 @@ import java.util.List;
 public class V2Person extends V2CommentDTO {
 
     private Long uid;
-    private String account;
+    private String username;
     private String uname;
     private String unick;
     private String email;

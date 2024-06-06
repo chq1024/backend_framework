@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SecurityUtil {
 
-    public static String passwordDecode(String password) {
+    public static String rqPasswordDecode(String password) {
         RSA rsa = currRsa();
         byte[] decode = Base64.decode(StrUtil.bytes(password, StandardCharsets.UTF_8));
         byte[] decrypt = rsa.decrypt(decode, KeyType.PrivateKey);

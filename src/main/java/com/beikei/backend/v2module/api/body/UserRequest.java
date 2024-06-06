@@ -14,7 +14,7 @@ public class UserRequest {
     @UidCheck(check = false,groups = {V2CreateGroup.class})
     private Long uid;
     @NotEmpty(groups = {V2CreateGroup.class},message = "账号不能为空!")
-    private String account;
+    private String username;
     @NotEmpty(groups = {V2CreateGroup.class,V2UpdateGroup.class},message = "用户名不能为空!")
     private String uname;
     @NotEmpty(groups = {V2UpdateGroup.class},message = "昵称不能为空!")

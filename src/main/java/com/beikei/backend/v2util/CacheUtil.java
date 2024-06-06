@@ -22,14 +22,14 @@ public class CacheUtil {
 
     public static String formatUserCache(V2User user, List<GrantedAuthority> authorities) {
         String characters = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining("|"));
-        return user.getAccount() + "#" + (user.getOpened()?1:0) + "#" + (user.getValid()?1:0) + "#" + characters;
+        return user.getUsername() + "#" + (user.getOpened()?1:0) + "#" + (user.getValid()?1:0) + "#" + characters;
     }
 
     public static Object[] parseUserCache(Long uid,String userCacheKey) {
         String[] cacheArr = userCacheKey.split("#");
         V2User user = new V2User();
         user.setId(uid);
-        user.setAccount(cacheArr[0]);
+        user.setUsername(cacheArr[0]);
         user.setOpened("1".equals(cacheArr[1]));
         user.setValid("1".equals(cacheArr[2]));
         String[] roles = cacheArr[3].split("\\|");

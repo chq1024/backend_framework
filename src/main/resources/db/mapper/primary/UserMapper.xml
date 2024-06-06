@@ -3,7 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beikei.backend.v2orm.mapper.UserMapper">
+
+    <sql id="updateCommon">
+        version = version + 1 and update_time = ${@com.beikei.backend.v2util.DateUtil@now()}
+    </sql>
+
     <select id="one" resultType="com.beikei.backend.v2orm.entity.V2User" parameterType="string">
-        SELECT * FROM USER WHERE ACCOUNT = #{account}
+        SELECT * FROM USER WHERE USERNAME = #{account}
     </select>
+
+    <update id="update">
+        UPDATE USER SET UNAME = #{user.uname},UNICK = #{user.unick}, EMAIL = #{user.email}, PHONE = #{user.phone},
+        <include refid="updateCommon"/>
+        WHERE id = #{uid} AND VERSION = #{user.version}
+    </update>
+
 </mapper>

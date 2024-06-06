@@ -3,6 +3,7 @@ package com.beikei.backend.v2orm.helper;
 import com.beikei.backend.v2core.core.V2CommentDomainHelper;
 import com.beikei.backend.v2core.enums.CacheEnum;
 import com.beikei.backend.v2core.enums.ResponseEnum;
+import com.beikei.backend.v2core.exception.V2GameException;
 import com.beikei.backend.v2module.user.cover.V2UserDetail;
 import com.beikei.backend.v2orm.entity.V2User;
 import com.beikei.backend.v2orm.mapper.UserMapper;
@@ -46,20 +47,42 @@ public class UserHelper extends V2CommentDomainHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public V2UserDetail cacheQuery(Long id, String username) {
-        String cacheKey = CacheUtil.formatRedisKey(CacheEnum.USER, String.valueOf(id));
+    public V2UserDetail cacheQuery(Long uid, String username) {
+        String cacheKey = CacheUtil.formatRedisKey(CacheEnum.USER, String.valueOf(uid));
         String userComm = RedisUtil.getString(cacheKey);
         if (!StringUtils.hasText(userComm)) {
             try {
-                return (V2UserDetail) userDetailsService.loadUserByUsername(username);
+                V2UserDetail v2UserDetail = (V2UserDetail) userDetailsService.loadUserByUsername(username);
+                Long quid = v2UserDetail.getV2User().getId();
+                // 这里有漏洞，可以通过账号查到其他玩家信息,谨慎
+                if (!uid.equals(quid)) {
+                    throw new V2GameException(ResponseEnum.ILLEGAL_ERROR);
+                }
             } catch (UsernameNotFoundException e) {
                 log.error("{}用户不存在",username);
                 return null;
             }
         }
-        Object[] parseUserCache = CacheUtil.parseUserCache(id, userComm);
+        Object[] parseUserCache = CacheUtil.parseUserCache(uid, userComm);
         V2User user  = (V2User) parseUserCache[0];
         List<GrantedAuthority> characters = (List<GrantedAuthority>) parseUserCache[1];
         return new V2UserDetail(user,characters);
+    }
+
+    // 暂不使用延迟双删
+    public int update(Long uid,V2User user) {
+        int update = userMapper.update(uid, user);
+        if (update > 0) {
+            String cacheKey = CacheUtil.formatRedisKey(CacheEnum.USER, String.valueOf(uid));
+            RedisUtil.delete(cacheKey);
+        }
+        return update;
+    }
+
+    public void create(V2User user) {
+        // 对初始密码加密
+
+//        user.setPassword();
+//        userMapper.create(v2User);
     }
 }

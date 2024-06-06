@@ -45,7 +45,7 @@ public class ApiUserController {
     }
 
     @DeleteMapping("/{uid}")
-    @PreAuthorize("hasPermission('ROLE',{'ADMIN'})")
+    @PreAuthorize("hasPermission('ROLE','ADMIN')")
     public V2CommentResponse<Void> delete(@PathVariable("uid") @NotNull Long uid) {
         userService.delete(uid);
         return V2CommentResponse.success(null);

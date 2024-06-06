@@ -36,7 +36,7 @@ public class V2UserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return v2User.getAccount();
+        return v2User.getUsername();
     }
 
     /**

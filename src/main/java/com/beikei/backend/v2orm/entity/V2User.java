@@ -19,7 +19,7 @@ public class V2User extends V2RecordCommentEntity {
 
     private Long id;
     private String tenantId;
-    private String account;
+    private String username;
     private String password;
     private String slat;
     private String uname;
