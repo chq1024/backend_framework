@@ -9,11 +9,13 @@ import lombok.Getter;
 @Getter
 public enum CacheEnum {
 
-    TENANT("tenant"),
+    TENANT("Tenant"),
 
-    SECURITY("security"),
+    SECURITY("Security"),
 
-    USER("user"),
+    USER("User"),
+
+    ROLE("Role"),
     ;
 
     private final String belong;
